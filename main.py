@@ -43,7 +43,6 @@ def apply_move_to_board(board, move, shape):
     new_b = check_and_remove_completed_regions(board)
     return new_b
 
-
 def check_and_remove_completed_regions(board):
     '''
     removes the filled sections of the board
@@ -74,8 +73,6 @@ def check_and_remove_completed_regions(board):
                 board[i][j] = 0
     return board
 
-
-
 def is_valid_move(board, shape, row, col):
     '''
     Checks if a move is possible
@@ -103,7 +100,6 @@ def place_shape_on_board(board_1, move):
 
     return board_1
 
-
 def evaluate_board(board):
 
     '''
@@ -124,9 +120,9 @@ def evaluate_board(board):
             # i;j
             if board[i][j] == 1:
                 if i == 0 or i == 8:
-                    score += 3  #3 - плохая идея
+                    score += 1  #3 - плохая идея
                 if j == 0 or j == 8:
-                    score += 3
+                    score += 1
                 try:
                     if board[i + 1][j] == 1:
                         score += 1
@@ -151,11 +147,16 @@ def evaluate_board(board):
                         score += 1
                 except IndexError:
                     pass
+    for row in board:
+        if sum(row) == 8 and row[0] == 1 and row[8] == 1:
+            score += 50
+
+    for i in range(9):
+        if sum(row[i] for row in board) == 8 and board[0][i] == 1 and board[8][i] == 1:
+            score += 50
+
     
     return score
-
-
-    
 
 def is_game_over(board, shape):
     '''
@@ -165,7 +166,6 @@ def is_game_over(board, shape):
         return True
     return False
     
-
 def select_best_move(board, shape):
     '''
     Chooses the best move. It looks like a minimax algorithm
@@ -187,7 +187,6 @@ def select_best_move(board, shape):
             best_move = move
     return best_move
 
-
 def visualize_move(board, move, shape):
     '''
     Displays where to go more explicitly
@@ -207,7 +206,6 @@ def visualize_move(board, move, shape):
         print(' '.join(map(str, row)))
     print()
 
-
 def get_board(b_1):
     '''
     Displays the board in the console
@@ -215,8 +213,6 @@ def get_board(b_1):
     for row in b_1:
         print(' '.join(map(str, row)))
     print()
-
-
 
 def start_game(board):
     '''
@@ -235,9 +231,6 @@ def start_game(board):
         shape = shapes[int(input('shape_id = '))]
         copy_board = copy.deepcopy(board)
     print("Game over!")
-
-
-
 
 if __name__ == '__main__':
      start_game(real_board)
