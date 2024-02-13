@@ -1,7 +1,7 @@
 # WoodokuSolver
 WoodokuSolver is a project aimed at solving woodoku.
 
-# How to start app  
+# How to launch the application  
 1. Clone repo  
 2. run main.py  
 
