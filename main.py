@@ -147,6 +147,7 @@ def evaluate_board(board):
                         score += 1
                 except IndexError:
                     pass
+
     for row in board:
         if sum(row) == 8 and row[0] == 1 and row[8] == 1:
             score += 50
@@ -185,7 +186,8 @@ def select_best_move(board, shape):
         if score > best_score:
             best_score = score
             best_move = move
-    return best_move
+
+    return [best_score, best_move, shape]
 
 def visualize_move(board, move, shape):
     '''
@@ -214,21 +216,97 @@ def get_board(b_1):
         print(' '.join(map(str, row)))
     print()
 
+def triple_moves(board, shapes):
+    score_1 = select_best_move(copy.deepcopy(board), shapes[0])[0]
+    move_1 = select_best_move(copy.deepcopy(board), shapes[0])[1:]
+    score_2 = select_best_move(copy.deepcopy(board), shapes[1])[0]
+    move_2 = select_best_move(copy.deepcopy(board), shapes[1])[1:]
+    score_3 = select_best_move(copy.deepcopy(board), shapes[2])[0]
+    move_3 = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+
+    if score_1 > score_2 and score_1 > score_3: #Первый ход самый выгодный
+        first_move = move_1
+        board = apply_move_to_board(board, move_1[0], shapes[0])
+
+        score_2_2 = select_best_move(copy.deepcopy(board), shapes[1])[0]
+        move_2_2 = select_best_move(copy.deepcopy(board), shapes[1])[1:]
+        score_3_2 = select_best_move(copy.deepcopy(board), shapes[2])[0]
+        move_3_2 = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+        if score_2_2 > score_3_2:
+            second_move = move_2_2
+            board = apply_move_to_board(board, move_2_2[0], shapes[1])
+            third_move = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+
+        else:
+            second_move = move_3_2
+            board = apply_move_to_board(board, move_3_2[0], shapes[2])
+            third_move = select_best_move(copy.deepcopy(board), shapes[1])[1:]
+            
+    elif score_2 > score_1 and score_2 > score_3: #Второй ход самый выгодный
+        first_move = move_2
+        board = apply_move_to_board(board, move_2[0], shapes[1])
+
+        score_1_2 = select_best_move(copy.deepcopy(board), shapes[1])[0]
+        move_1_2 = select_best_move(copy.deepcopy(board), shapes[1])[1:]
+        score_3_2 = select_best_move(copy.deepcopy(board), shapes[2])[0]
+        move_3_2 = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+        if score_1_2 > score_3_2:
+            second_move = move_1_2
+            board = apply_move_to_board(board, move_1_2[0], shapes[0])
+            third_move = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+
+        else:
+            second_move = move_3_2
+            board = apply_move_to_board(board, move_3_2[0], shapes[2])
+            third_move = select_best_move(copy.deepcopy(board), shapes[0])[1:]
+
+    else: #Третий ход самый выгодный
+
+        first_move = move_3
+        board = apply_move_to_board(board, move_3[0], shapes[2])
+
+        score_1_2 = select_best_move(copy.deepcopy(board), shapes[0])[0]
+        move_1_2 = select_best_move(copy.deepcopy(board), shapes[0])[1:]
+        score_2_2 = select_best_move(copy.deepcopy(board), shapes[1])[0]
+        move_2_2 = select_best_move(copy.deepcopy(board), shapes[1])[1:]
+        if score_1_2 > score_2_2:
+            second_move = move_1_2
+            board = apply_move_to_board(board, move_1_2[0], shapes[0])
+            third_move = select_best_move(copy.deepcopy(board), shapes[2])[1:]
+        else:
+            second_move = move_2_2
+            board = apply_move_to_board(board, move_2_2[0], shapes[1])
+            third_move = select_best_move(copy.deepcopy(board), shapes[0])[1:]
+    print(first_move, second_move, third_move)
+    return [first_move, second_move, third_move]
+
 def start_game(board):
     '''
     Runs the algorithm
     '''
-    shape = shapes[int(input('shape_id = '))]
+    shape_1 = shapes[int(input('shape_id = '))]
+    shape_2 = shapes[int(input('shape_id = '))]
+    shape_3 = shapes[int(input('shape_id = '))]
+    my_shapes = [shape_1,shape_2,shape_3]
     copy_board = copy.deepcopy(board)
-    while not(is_game_over(copy_board, shape)):
-        my_move = select_best_move(copy_board, shape)
+    while (any(not is_game_over(copy_board, shape) for shape in my_shapes)):
+
+        my_moves = triple_moves(copy_board, my_shapes)
         print("Best move:")
         #get_board(board)
-        visualize_move(copy_board, my_move, shape)
+        for move in my_moves:
+            visualize_move(copy_board, move[0], my_shapes)
+            copy_board = place_shape_on_board(copy_board, move[0])
         
-        board = apply_move_to_board(board, my_move, shape)
+        
+        board = apply_move_to_board(board, my_moves[0][0], my_shapes)
+        board = apply_move_to_board(board, my_moves[1][0], my_shapes)
+        board = apply_move_to_board(board, my_moves[2][0], my_shapes)
        
-        shape = shapes[int(input('shape_id = '))]
+        shape_1 = shapes[int(input('shape_id = '))]
+        shape_2 = shapes[int(input('shape_id = '))]
+        shape_3 = shapes[int(input('shape_id = '))]
+        my_shapes = [shape_1,shape_2,shape_3]
         copy_board = copy.deepcopy(board)
     print("Game over!")
 
