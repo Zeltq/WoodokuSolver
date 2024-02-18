@@ -223,7 +223,7 @@ def triple_moves(board, shapes):
     move_2 = select_best_move(copy.deepcopy(board), shapes[1])[1:]
     score_3 = select_best_move(copy.deepcopy(board), shapes[2])[0]
     move_3 = select_best_move(copy.deepcopy(board), shapes[2])[1:]
-    print(move_3)
+    #print(move_3)
 
     if score_1 > score_2 and score_1 > score_3: #Первый ход самый выгодный
         first_move = move_1
@@ -279,7 +279,7 @@ def triple_moves(board, shapes):
             board = apply_move_to_board(board, move_2_2[0])
             third_move = select_best_move(copy.deepcopy(board), shapes[0])[1:]
             
-    print(first_move, second_move, third_move)
+    #print(first_move, second_move, third_move)
     return [first_move, second_move, third_move]
 
 def start_game(board):
