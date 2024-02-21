@@ -1,6 +1,7 @@
 import pprint
 import copy
 from shapes_file import Shape, shapes
+from itertools import permutations
 
 
 real_board = [[0,0,0,0,0,0,0,0,0],
@@ -314,24 +315,100 @@ def start_game(board):
         copy_board = copy.deepcopy(board)
     print("Game over!")
 
-if __name__ == '__main__':
-     start_game(real_board)
+def start_game_2(board):
+    
+    shape_1 = shapes[int(input('shape_id = '))]
+    shape_2 = shapes[int(input('shape_id = '))]
+    shape_3 = shapes[int(input('shape_id = '))]
+    my_shapes = [shape_1,shape_2,shape_3]
+    copy_board = copy.deepcopy(board)
+    while True:
+        moves = good_alg(copy_board, my_shapes)
+        print("Best move:")
+        visualize_move(copy.deepcopy(board), moves[0], my_shapes)
+        board = apply_move_to_board(board, moves[0])
+        visualize_move(copy.deepcopy(board), moves[1], my_shapes)
+        board = apply_move_to_board(board, moves[1])
+        visualize_move(copy.deepcopy(board), moves[2], my_shapes)
+        board = apply_move_to_board(board, moves[2])
+        
+        shape_1 = shapes[int(input('shape_id = '))]
+        shape_2 = shapes[int(input('shape_id = '))]
+        shape_3 = shapes[int(input('shape_id = '))]
+        my_shapes = [shape_1,shape_2,shape_3]
+        copy_board = copy.deepcopy(board)
+
+def triple_moves_in_order(board, order):
+    boards_after_move_1 = []
+    real_moves = []
+
+    for move in get_available_moves(board, order[0]):
+        boards_after_move_1.append([apply_move_to_board(copy.deepcopy(board), move), move])
+
+    boards_after_move_2 = []
+
+    for b in boards_after_move_1:
+        for move in get_available_moves(b[0], order[1]):
+            boards_after_move_2.append([apply_move_to_board(copy.deepcopy(b[0]), move), [b[1], move]])
+
+
+    max_score = float('-inf')
+    for b in boards_after_move_2:
+        for move in get_available_moves(b[0], order[2]):
+            new_b = apply_move_to_board(copy.deepcopy(b[0]), move)
+            score = evaluate_board(new_b)
+            if score > max_score:
+                max_score = score
+                real_moves = b[1] + [move]
+            #boards_after_move_3.append([new_b, b[1] + [move]])
+    
+
+    return [real_moves, max_score]
+
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+# print(triple_moves_in_order(real_board, [shapes[504],shapes[504],shapes[504]]))
+
+
+
+
+
+
+def good_alg(board,shapes):
+    max_score = float('-inf')
+    ords_1 = [shapes[0], shapes[1],shapes[2]]
+    ords_2 = [shapes[0], shapes[2],shapes[1]] 
+    ords_3 = [shapes[1], shapes[2],shapes[0]]
+    ords_4 = [shapes[1], shapes[0],shapes[2]]
+    ords_5 = [shapes[2], shapes[0],shapes[1]]
+    ords_6 = [shapes[2], shapes[1],shapes[0]]
+    possible_orders = [ords_1,ords_2,ords_3,ords_4,ords_5,ords_6]
+    for order in possible_orders:
+        copy_board = copy.deepcopy(board)
+        result = triple_moves_in_order(copy_board, order)
+        if result[1] > max_score:
+            moves = result[0]
+            max_score = result[1]
+    return moves
         
 
 
 
 
-# test_board = [[0,0,0,0,0,0,0,0,0],
-#               [0,0,0,0,0,0,0,0,0],
-#               [0,0,0,0,0,0,0,0,0],
-#               [0,0,0,0,0,0,0,0,0],
-#               [0,0,0,0,0,0,0,0,0],
-#               [0,0,0,0,0,0,0,0,0],
-#               [1,0,0,0,0,0,0,0,1],
-#               [1,1,1,0,0,0,0,0,1],
-#               [1,1,1,0,0,0,0,1,1]] 
 
-# #-149950 #-59986
-# print(len(get_available_moves(test_board, shape=shapes[407])))
 
-# print()
+
+
+
+
+
+if __name__ == '__main__':
+    start_game_2(real_board)
+    #print(good_alg(real_board, [shapes[504],shapes[504],shapes[504]]))
+        
+
+
+

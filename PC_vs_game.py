@@ -58,7 +58,7 @@ def pc_vs_pc(board):
 
 if __name__ == '__main__':
     reses = []
-    for i in range(200):
+    for i in range(5):
         real_board = [[0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0],
