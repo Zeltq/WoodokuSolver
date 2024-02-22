@@ -4,15 +4,15 @@ from shapes_file import Shape, shapes
 from itertools import permutations
 
 
-real_board = [[0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],]
+real_board = [[1,1,0,0,0,0,0,0,0],
+              [1,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0],
+              [1,0,0,1,0,0,0,0,0],
+              [0,0,0,0,0,0,0,1,1],
+              [1,0,0,0,0,0,1,1,0],
+              [0,0,0,1,1,1,1,0,0],
+              [0,0,0,1,1,0,1,0,0],
+              [0,0,0,0,0,0,0,0,0],]
 
 
 def get_available_moves(board, shape):
@@ -116,46 +116,55 @@ def evaluate_board(board):
     '''
     За блок рядом с границей прибавлять не 1 очко, а 2
     '''
-    for i in range(0, 9, 1):
-        for j in range(0, 9, 1):
-            # i;j
-            if board[i][j] == 1:
-                if i == 0 or i == 8:
-                    score += 1  #3 - плохая идея
-                if j == 0 or j == 8:
-                    score += 1
-                try:
-                    if board[i + 1][j] == 1:
-                        score += 1
-                except IndexError:
-                    pass
+    # for i in range(0, 9, 1):
+    #     for j in range(0, 9, 1):
+    #         # i;j
+    #         if board[i][j] == 1:
+    #             if i == 0 or i == 8:
+    #                 score += 1  #3 - плохая идея
+    #             if j == 0 or j == 8:
+    #                 score += 1
+    #             try:
+    #                 if board[i + 1][j] == 1:
+    #                     score += 1
+    #             except IndexError:
+    #                 pass
 
-                try:
-                    if board[i - 1][j] == 1:
-                        score += 1
+    #             try:
+    #                 if board[i - 1][j] == 1:
+    #                     score += 1
 
-                except IndexError:
-                    pass
+    #             except IndexError:
+    #                 pass
 
-                try:
-                    if board[i][j + 1] == 1:
-                        score += 1
-                except IndexError:
-                    pass
+    #             try:
+    #                 if board[i][j + 1] == 1:
+    #                     score += 1
+    #             except IndexError:
+    #                 pass
 
-                try:
-                    if board[i][j - 1] == 1:
-                        score += 1
-                except IndexError:
-                    pass
+    #             try:
+    #                 if board[i][j - 1] == 1:
+    #                     score += 1
+    #             except IndexError:
+    #                 pass
+    for i in range(0,8,1):
+        for j in range(0, 8, 1):
+            if board[i][j] == 1 and board[i + 1][j] == 1 and board[i][j + 1] == 1:
+                score += 1
 
-    for row in board:
-        if sum(row) == 8 and row[0] == 1 and row[8] == 1:
-            score += 50
+    for i in range(1,8,1):
+        for j in range(1, 8, 1):
+            if board[i][j] == 0 and board[i + 1][j] == 1 and board[i][j + 1] == 1 and board[i-1][j] == 1 and board[i][j-1] == 1:
+                score -=1
 
-    for i in range(9):
-        if sum(row[i] for row in board) == 8 and board[0][i] == 1 and board[8][i] == 1:
-            score += 50
+    # for row in board:
+    #     if sum(row) == 8 and row[0] == 1 and row[8] == 1:
+    #         score += 50
+
+    # for i in range(9):
+    #     if sum(row[i] for row in board) == 8 and board[0][i] == 1 and board[8][i] == 1:
+    #         score += 50
 
     
     return score
@@ -324,11 +333,15 @@ def start_game_2(board):
     copy_board = copy.deepcopy(board)
     while True:
         moves = good_alg(copy_board, my_shapes)
-        print("Best move:")
+        
+        print("Best moveS:")
+        print('Move 1:')
         visualize_move(copy.deepcopy(board), moves[0], my_shapes)
         board = apply_move_to_board(board, moves[0])
+        print('Move 2:')
         visualize_move(copy.deepcopy(board), moves[1], my_shapes)
         board = apply_move_to_board(board, moves[1])
+        print('Move 3:')
         visualize_move(copy.deepcopy(board), moves[2], my_shapes)
         board = apply_move_to_board(board, moves[2])
         
