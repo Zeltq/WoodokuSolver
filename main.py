@@ -109,10 +109,10 @@ def evaluate_board(board):
     score = 0
     
     # Проходим по каждой строке на доске
-    for row in board:
-        for pixel in row:
-            if pixel == 1:
-                score -= 1000
+    # for row in board:
+    #     for pixel in row:
+    #         if pixel == 1:
+    #             score -= 1000
     '''
     За блок рядом с границей прибавлять не 1 очко, а 2
     '''
@@ -151,13 +151,48 @@ def evaluate_board(board):
     for i in range(0,8,1):
         for j in range(0, 8, 1):
             if board[i][j] == 1 and board[i + 1][j] == 1 and board[i][j + 1] == 1:
-                score += 1
+                score += 3
+            
 
-    for i in range(1,8,1):
-        for j in range(1, 8, 1):
-            if board[i][j] == 0 and board[i + 1][j] == 1 and board[i][j + 1] == 1 and board[i-1][j] == 1 and board[i][j-1] == 1:
-                score -=1
+    for i in range(0, 9, 1):
+        for j in range(0, 9, 1):
+            if board[i][j] == 1:
+                score -= 1000
+            if i == 8 or j == 8 or i == 0 or j == 0:
+                if board[i][j] == 1:
+                    score += 100
+            else:
+                if board[i][j] == 1:
+                    counter = 0
+                    if board[i + 1][j] == 0:
+                        counter += 1
+                    if board[i][j + 1] == 0:
+                        counter += 1
+                    if board[i - 1][j] == 0:
+                        counter += 1
+                    if board[i][j - 1] == 0:
+                        counter += 1
+                    if counter >= 3:
+                        score -= 4**counter
+                else:
+                    counter = 0
+                    if board[i + 1][j] == 1:
+                        counter += 1
+                    if board[i][j + 1] == 1:
+                        counter += 1
+                    if board[i - 1][j] == 1:
+                        counter += 1
+                    if board[i][j - 1] == 1:
+                        counter += 1
+                    if counter >= 2: #Добавить умножение на counter строкой ниже
+                        score -= 4**counter
 
+    # for i in range(1,8,1):
+    #     for j in range(1, 8, 1):
+    #         if board[i][j] == 0 and board[i + 1][j] == 1 and board[i][j + 1] == 1 and board[i-1][j] == 1 and board[i][j-1] == 1:
+    #             score -=1
+
+    
     # for row in board:
     #     if sum(row) == 8 and row[0] == 1 and row[8] == 1:
     #         score += 50
