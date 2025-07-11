@@ -114,6 +114,10 @@ shapes = {
                 [0,0,1,0],
                 [0,1,0,0],
                 [1,0,0,0]]),
+                
+    419: Shape([[1,1],
+                [1,0],
+                [1,0]]),
 
     500: Shape([[0,0,1],
                 [0,0,1],
@@ -185,7 +189,9 @@ all_shapes = [shape for shape in shapes.values()]
 # Проверяем наличие повторяющихся элементов
 is_duplicate = (len(all_shapes) != len(set(all_shapes)))
 
-if is_duplicate:
-    print("There are duplicate elements in the dictionary.")
-else:
-    print("There are no duplicate items in the dictionary.")
+
+if __name__ == "__main__":
+    if is_duplicate:
+        print("There are duplicate elements in the dictionary.")
+    else:
+        print("There are no duplicate items in the dictionary.")
